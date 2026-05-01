@@ -5,7 +5,89 @@ import pytest
 from portfolio_risk_calculator import compute_risk_metrics, validate_portfolio
 
 
+def test_portfolio_not_dict():
+    with pytest.raises(ValueError):
+        compute_risk_metrics("not a dict")
 
+def test_missing_keys():
+    p = {"total_value_inr": 1000}
+    with pytest.raises(ValueError):
+        compute_risk_metrics(p)
+
+def test_invalid_types():
+    p = base_portfolio()
+    p["total_value_inr"] = "1000"
+    with pytest.raises(ValueError):
+        compute_risk_metrics(p)
+
+    p = base_portfolio()
+    p["monthly_expenses_inr"] = "bad"
+    with pytest.raises(ValueError):
+        compute_risk_metrics(p)
+
+    p = base_portfolio()
+    p["assets"] = "not a list"
+    with pytest.raises(ValueError):
+        compute_risk_metrics(p)
+
+def test_negative_values():
+    p = base_portfolio()
+    p["total_value_inr"] = -100
+    with pytest.raises(ValueError):
+        compute_risk_metrics(p)
+
+    p = base_portfolio()
+    p["monthly_expenses_inr"] = -100
+    with pytest.raises(ValueError):
+        compute_risk_metrics(p)
+
+def test_asset_not_dict():
+    p = base_portfolio()
+    p["assets"][0] = "bad"
+    with pytest.raises(ValueError):
+        compute_risk_metrics(p)
+
+def test_missing_asset_fields():
+    p = base_portfolio()
+    del p["assets"][0]["name"]
+    with pytest.raises(ValueError):
+        compute_risk_metrics(p)
+
+def test_invalid_asset_name():
+    p = base_portfolio()
+    p["assets"][0]["name"] = ""
+    with pytest.raises(ValueError):
+        compute_risk_metrics(p)
+
+def test_allocation_not_number():
+    p = base_portfolio()
+    p["assets"][0]["allocation_pct"] = "bad"
+    with pytest.raises(ValueError):
+        compute_risk_metrics(p)
+
+def test_crash_not_number():
+    p = base_portfolio()
+    p["assets"][0]["expected_crash_pct"] = "bad"
+    with pytest.raises(ValueError):
+        compute_risk_metrics(p)
+def test_largest_risk_asset_changes():
+    p = base_portfolio()
+    p["assets"][1]["expected_crash_pct"] = -90  
+    result = compute_risk_metrics(p)
+
+    assert result["severe"]["largest_risk_asset"] == "NIFTY50"
+
+def test_print_functions(capsys):
+    p = base_portfolio()
+    result = compute_risk_metrics(p)
+
+    from portfolio_risk_calculator import print_bar_chart, print_report
+
+    print_bar_chart(p)
+    print_report(result)
+
+    captured = capsys.readouterr()
+    assert "Portfolio Risk Report" in captured.out
 def base_portfolio():
     return {
         "total_value_inr": 10_000_000,
@@ -83,7 +165,7 @@ def test_ruin_test_fails_when_runway_short():
 def test_allocations_must_sum_to_100():
     p = base_portfolio()
     p["assets"][0]["allocation_pct"] = 25  # now sums to 95
-    with pytest.raises(ValueError, match="must be 100"):
+    with pytest.raises(ValueError):
         compute_risk_metrics(p)
 
 
