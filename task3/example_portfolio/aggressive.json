@@ -1,0 +1,81 @@
+import logging
+import requests
+
+logger = logging.getLogger(__name__)
+
+GDELT_URL = "https://api.gdeltproject.org/api/v2/doc/doc"
+
+
+def build_query(asset_name: str) -> str | None:
+    """
+    Create a search query ONLY based on the given asset name.
+    No assumptions, no fixed mapping.
+    """
+
+    name = asset_name.strip().upper()
+
+    if name == "CASH":
+        return None  # skip irrelevant
+
+    # Smart but generic query
+    return f"{asset_name} finance market news"
+
+
+def fetch_news_for_asset(asset_name: str, max_articles: int = 3):
+    query = build_query(asset_name)
+
+    if not query:
+        return []
+
+    try:
+        params = {
+            "query": query,
+            "mode": "ArtList",
+            "format": "json",
+            "maxrecords": max_articles,
+            "timespan": "7d",
+        }
+
+        resp = requests.get(GDELT_URL, params=params, timeout=10)
+        resp.raise_for_status()
+
+        articles = resp.json().get("articles", [])
+
+        return [
+            {
+                "title": a.get("title", "")[:150],
+                "source": a.get("domain", "unknown"),
+            }
+            for a in articles
+        ]
+
+    except Exception as exc:
+        logger.warning("News fetch failed for %s: %s", asset_name, exc)
+        return []
+
+
+def fetch_news_for_portfolio(portfolio: dict) -> str:
+    """
+    ONLY uses assets present in the input portfolio.
+    No external assumptions.
+    """
+
+    news_lines = []
+
+    for asset in portfolio.get("assets", []):
+        name = asset.get("name")
+
+        if not name:
+            continue
+
+        articles = fetch_news_for_asset(name)
+
+        if not articles:
+            continue
+
+        news_lines.append(f"\n{name} News:")
+
+        for a in articles:
+            news_lines.append(f"- {a['title']} ({a['source']})")
+
+    return "\n".join(news_lines) if news_lines else "No relevant recent news found."
