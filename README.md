@@ -1,6 +1,6 @@
 # timecell-intern-kalpshah
 
-Submission for the Timecell AI engineering internship test — Summer 2026.
+Submission for the Timecell AI engineering internship test : Summer 2026.
 
 **Author:** Kalp Shah  
 **Loom walkthrough:**(https://www.loom.com/share/844660c065224b6a87ca4a914be93590)
@@ -9,7 +9,7 @@ Submission for the Timecell AI engineering internship test — Summer 2026.
 
 ## What This Is
 
-Four tasks, one coherent system. The core idea I kept coming back to while building this: the LLM should never touch the math. It explains, critiques, and narrates — but every number on screen comes from deterministic Python. Tasks 3 and 4 both import Task 1's calculator as their source of truth, so nothing gets hallucinated and everything is traceable.
+Four tasks, one coherent system. The core idea I kept coming back to while building this: the LLM should never touch the math. It explains, critiques, and narrates , but every number on screen comes from deterministic Python. Tasks 3 and 4 both import Task 1's calculator as their source of truth, so nothing gets hallucinated and everything is traceable.
 
 ---
 
@@ -95,19 +95,8 @@ GDELT timed out consistently. Yahoo Finance RSS rate-limited on burst requests. 
 
 ## The Hardest Part
 
-Task 4 broke and got rebuilt twice. The first version let the LLM do the math — fast to write, wrong in practice. The second version separated concerns properly: LLM for judgment, Python for arithmetic. Getting that boundary right took longer than building any individual feature, but it's also what makes the output actually trustworthy.
+Task 4 broke and got rebuilt twice. The first version let the LLM do the math ,fast to write, wrong in practice. The second version separated concerns properly: LLM for judgment, Python for arithmetic. Getting that boundary right took longer than building any individual feature, but it's also what makes the output actually trustworthy.
 
----
-
-## What I'd Build Next
-
-- **Correlation modeling in Task 4.** Right now each stress change is independent. In real crashes, BTC and NIFTY don't fall independently — a correlation matrix would let one assumption trigger realistic joint moves across assets.
-
-- **Historically grounded confidence scores.** Task 4's confidence percentages are LLM estimates. Better to anchor them in base rates — how often has BTC actually exceeded -80% drawdown in a 12-month window?
-
-- **Side-by-side decision comparison.** Task 4 stress-tests one decision at a time. A more useful tool would take two portfolio allocations and return a comparative failure profile — useful when you're weighing two real options.
-
----
 
 ## Repository Structure
 
