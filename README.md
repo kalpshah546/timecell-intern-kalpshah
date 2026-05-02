@@ -50,12 +50,12 @@ Four tasks, one coherent system. The core idea I kept coming back to while build
 
 ## Tasks at a Glance
 
-| Task | Points | What It Does |
-|------|--------|--------------|
-| 1 | 30 | Computes 5 risk metrics + severe/moderate crash scenarios + CLI bar chart |
-| 2 | 20 | Fetches BTC, NIFTY 50, GOLD live with rich-formatted output |
-| 3 | 30 | LLM explainer with tone control, live news context, critique + revision loop |
-| 4 | 20 | Pre-mortem stress-tester — LLM proposes shocks, deterministic engine scores them |
+| Task | What It Does |
+|------|--------------|
+| 1 | Computes 5 risk metrics + severe/moderate crash scenarios + CLI bar chart |
+| 2 | Fetches BTC, NIFTY 50, GOLD live with rich-formatted output |
+| 3 | LLM explainer with tone control, live news context, critique + revision loop |
+| 4 | Pre-mortem stress-tester, LLM proposes shocks, deterministic engine scores them |
 
 Each task has its own README with run commands and sample output.
 
