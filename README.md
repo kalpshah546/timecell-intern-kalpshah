@@ -3,7 +3,7 @@
 Submission for the Timecell AI engineering internship test — Summer 2026.
 
 **Author:** Kalp Shah  
-**Loom walkthrough:** [LINK_HERE]
+**Loom walkthrough:**(https://www.loom.com/share/844660c065224b6a87ca4a914be93590)
 
 ---
 
